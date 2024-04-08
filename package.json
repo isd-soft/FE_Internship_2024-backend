@@ -1,0 +1,42 @@
+{
+  "name": "emarket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:start": "SET NODE_CONFIG_DIR=./config&& nodemon",
+    "start:build": "SET NODE_CONFIG_DIR=./config&& SET NODE_ENV=prod&& rimraf ./dist && tsc"
+  },
+  "keywords": [],
+  "author": "Dorin Tufar",
+  "license": "ISC",
+  "dependencies": {
+    "@reactivex/rxjs": "^6.6.7",
+    "celery-node": "^0.5.9",
+    "config": "^3.3.8",
+    "express": "^4.19.2",
+    "ioredis": "^5.2.4",
+    "js-sha512": "^0.9.0",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.6.0",
+    "sequelize": "^6.37.2",
+    "sequelize-cli-typescript": "^3.2.0-c",
+    "sequelize-typescript": "^2.1.6",
+    "socket.io": "^4.5.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^18.19.28",
+    "@types/pg": "^8.6.5",
+    "@types/validator": "^13.11.9",
+    "nodemon": "^2.0.20",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  }
+}

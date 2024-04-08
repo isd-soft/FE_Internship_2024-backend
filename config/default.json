@@ -1,0 +1,26 @@
+{
+  "sequelize": {
+    "sync": {
+      "force": false
+    }
+  },
+  "http": {
+    "port": 3000
+  },
+  "auth": {
+    "secretKey": "MY_SECRET_KEY"
+  },
+  "sio": {
+    "opts": {
+      "maxHttpBufferSize": 1e8,
+      "cors": {
+        "origin": "*",
+        "methods": [
+          "GET",
+          "POST",
+          "DELETE"
+        ]
+      }
+    }
+  }
+}

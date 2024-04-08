@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "emarket",
+    "password": "hackme",
+    "database": "emarket",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "emarket",
+    "password": "hackme",
+    "database": "emarket",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "emarket",
+    "password": "hackme",
+    "database": "emarket",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  }
+}
