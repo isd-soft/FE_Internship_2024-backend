@@ -5,7 +5,6 @@ const LIVE_UPDATE_EVENT: string = 'live:entity-hook';
 
 
 export async function genericEntityNotifierAfterCreate(instance: Model, options: any) {
-    console.log('hook', await toJson([instance]));
     AppSIO.send(LIVE_UPDATE_EVENT, {
         model: this.name,
         event: 'AFTER_CREATE',
