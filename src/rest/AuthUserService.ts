@@ -3,15 +3,10 @@ import {createUser, findUserById, updateUser} from "../db/repository/AuthUserRep
 import {AuthUser} from "../db/models/AuthUser";
 import {formatGenericErrorMessage} from "./utils";
 import {Op} from "sequelize";
-import {expressAuthAccessMiddleware, expressAuthMiddleware} from "../services/Middleware";
+import {authMiddleware} from "../services/Middleware";
 
 
-const accessMiddlewareMixin = [
-    expressAuthMiddleware,
-    expressAuthAccessMiddleware(['ADMIN'])
-];
-
-AppExpress.post('/user/create', accessMiddlewareMixin, async (req, res) => {
+AppExpress.post('/user/create', authMiddleware(['ADMIN']), async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
@@ -26,7 +21,7 @@ AppExpress.post('/user/create', accessMiddlewareMixin, async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.get('/user/read/:id', expressAuthMiddleware, async (req, res) => {
+AppExpress.get('/user/read/:id', authMiddleware(['ADMIN']), async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
@@ -41,7 +36,7 @@ AppExpress.get('/user/read/:id', expressAuthMiddleware, async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.get('/user/list', expressAuthMiddleware, async (req, res) => {
+AppExpress.get('/user/list', authMiddleware(['ADMIN']), async (req, res) => {
     const responseStat: number = 200;
     const responseData: any = [];
     const users: AuthUser[] = await AuthUser.findAll({order: ['username']});
@@ -52,7 +47,7 @@ AppExpress.get('/user/list', expressAuthMiddleware, async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.post('/user/update', accessMiddlewareMixin, async (req, res) => {
+AppExpress.post('/user/update', authMiddleware(['ADMIN']), async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
@@ -67,7 +62,7 @@ AppExpress.post('/user/update', accessMiddlewareMixin, async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.delete('/user/delete', accessMiddlewareMixin, async (req, res) => {
+AppExpress.delete('/user/delete', authMiddleware(['ADMIN']), async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {

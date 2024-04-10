@@ -1,15 +1,10 @@
 import {AppExpress} from "../index";
 import {UserNotFoundError} from "../db/repository/AuthUserRepository";
 import {AuthRole} from "../db/models/AuthRole";
-import {expressAuthAccessMiddleware, expressAuthMiddleware} from "../services/Middleware";
+import {authMiddleware} from "../services/Middleware";
 
 
-const accessMiddlewareMixin = [
-    expressAuthMiddleware,
-    expressAuthAccessMiddleware(['ADMIN'])
-];
-
-AppExpress.get('/auth/role/list', accessMiddlewareMixin, async (req, res) => {
+AppExpress.get('/auth/role/list', authMiddleware(['ADMIN']), async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
@@ -24,7 +19,7 @@ AppExpress.get('/auth/role/list', accessMiddlewareMixin, async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.post('/auth/role/create', accessMiddlewareMixin, async (req, res) => {
+AppExpress.post('/auth/role/create', authMiddleware(['ADMIN']), async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
