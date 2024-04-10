@@ -3,8 +3,13 @@ import {formatGenericErrorMessage} from "./utils";
 import {Article} from "../db/models/Article";
 import {ArticleNotFound, findArticle} from "../db/repository/ArticleRepository";
 import {Op} from "sequelize";
-import {expressAuthMiddleware} from "../services/Middleware";
+import {expressAuthAccessMiddleware, expressAuthMiddleware} from "../services/Middleware";
 
+
+const accessMiddlewareMixin = [
+    expressAuthMiddleware,
+    expressAuthAccessMiddleware(['ADMIN'])
+];
 
 AppExpress.get('/article/list', async (req, res) => {
     res.status(200);
@@ -26,7 +31,7 @@ AppExpress.get('/article/read/:id', async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.post('/article/create', expressAuthMiddleware, async (req, res) => {
+AppExpress.post('/article/create', accessMiddlewareMixin, async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
@@ -41,7 +46,7 @@ AppExpress.post('/article/create', expressAuthMiddleware, async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.post('/article/update', expressAuthMiddleware, async (req, res) => {
+AppExpress.post('/article/update', accessMiddlewareMixin, async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
@@ -58,7 +63,7 @@ AppExpress.post('/article/update', expressAuthMiddleware, async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.delete('/article/delete', expressAuthMiddleware, async (req, res) => {
+AppExpress.delete('/article/delete', accessMiddlewareMixin, async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {

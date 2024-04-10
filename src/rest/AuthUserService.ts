@@ -3,10 +3,15 @@ import {createUser, findUserById, updateUser} from "../db/repository/AuthUserRep
 import {AuthUser} from "../db/models/AuthUser";
 import {formatGenericErrorMessage} from "./utils";
 import {Op} from "sequelize";
-import {expressAuthMiddleware} from "../services/Middleware";
+import {expressAuthAccessMiddleware, expressAuthMiddleware} from "../services/Middleware";
 
 
-AppExpress.post('/user/create', expressAuthMiddleware, async (req, res) => {
+const accessMiddlewareMixin = [
+    expressAuthMiddleware,
+    expressAuthAccessMiddleware(['ADMIN'])
+];
+
+AppExpress.post('/user/create', accessMiddlewareMixin, async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
@@ -47,7 +52,7 @@ AppExpress.get('/user/list', expressAuthMiddleware, async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.post('/user/update', expressAuthMiddleware, async (req, res) => {
+AppExpress.post('/user/update', accessMiddlewareMixin, async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
@@ -62,7 +67,7 @@ AppExpress.post('/user/update', expressAuthMiddleware, async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.delete('/user/delete', expressAuthMiddleware, async (req, res) => {
+AppExpress.delete('/user/delete', accessMiddlewareMixin, async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {

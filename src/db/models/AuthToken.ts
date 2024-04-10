@@ -1,5 +1,5 @@
 import {
-    AllowNull,
+    AllowNull, BelongsTo,
     Column,
     CreatedAt,
     DataType,
@@ -36,5 +36,5 @@ export class AuthToken extends Model<AuthToken> {
     creationDate: Date;
 
     @ForeignKey(() => AuthUser)
-    user: AuthUser;
+    user: string;
 }

@@ -19,7 +19,10 @@ AppExpress.post('/auth/sign-in', async (req, res) => {
             responseData = {message: 'Incorrect password'};
         } else {
             responseStat = 200;
-            responseData = (await findOrGenerateAuthToken(user)).toJSON();
+            responseData = {
+                user: await user.toJSON(),
+                token: (await findOrGenerateAuthToken(user)).toJSON()
+            };
         }
     } catch (e) {
         responseStat = e instanceof UserNotFoundError ? 417 : 500;

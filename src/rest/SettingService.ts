@@ -2,15 +2,20 @@ import {AppExpress} from "../index";
 import {formatGenericErrorMessage} from "./utils";
 import {Setting} from "../db/models/Setting";
 import {Op} from "sequelize";
-import {expressAuthMiddleware} from "../services/Middleware";
+import {expressAuthAccessMiddleware, expressAuthMiddleware} from "../services/Middleware";
 
 
-AppExpress.get('/setting/list', expressAuthMiddleware, async (req, res) => {
+const accessMiddlewareMixin = [
+    expressAuthMiddleware,
+    expressAuthAccessMiddleware(['ADMIN'])
+];
+
+AppExpress.get('/setting/list', accessMiddlewareMixin, async (req, res) => {
     res.status(200);
     res.send((await Setting.findAll({order: ['name']})).map(a => a.toJSON()));
 });
 
-AppExpress.get('/setting/read/:name', expressAuthMiddleware, async (req, res) => {
+AppExpress.get('/setting/read/:name', accessMiddlewareMixin, async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
@@ -25,7 +30,7 @@ AppExpress.get('/setting/read/:name', expressAuthMiddleware, async (req, res) =>
     res.send(responseData);
 });
 
-AppExpress.post('/setting/create', expressAuthMiddleware, async (req, res) => {
+AppExpress.post('/setting/create', accessMiddlewareMixin, async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
@@ -40,7 +45,7 @@ AppExpress.post('/setting/create', expressAuthMiddleware, async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.post('/setting/update', expressAuthMiddleware, async (req, res) => {
+AppExpress.post('/setting/update', accessMiddlewareMixin, async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {
@@ -57,7 +62,7 @@ AppExpress.post('/setting/update', expressAuthMiddleware, async (req, res) => {
     res.send(responseData);
 });
 
-AppExpress.delete('/setting/delete', expressAuthMiddleware, async (req, res) => {
+AppExpress.delete('/setting/delete', accessMiddlewareMixin, async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {

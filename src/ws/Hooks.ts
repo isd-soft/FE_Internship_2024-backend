@@ -4,38 +4,39 @@ import {AppSIO} from "../index";
 const LIVE_UPDATE_EVENT: string = 'live:entity-hook';
 
 
-export function genericEntityNotifierAfterCreate(instance: Model, options: any) {
+export async function genericEntityNotifierAfterCreate(instance: Model, options: any) {
+    console.log('hook', await toJson([instance]));
     AppSIO.send(LIVE_UPDATE_EVENT, {
         model: this.name,
         event: 'AFTER_CREATE',
         fields: options.fields,
-        instances: [instance.toJSON()]
+        instances: await toJson([instance])
     });
 }
 
-export function genericEntityNotifierAfterDestroy(instance: Model) {
+export async function genericEntityNotifierAfterDestroy(instance: Model) {
     AppSIO.send(LIVE_UPDATE_EVENT, {
         model: this.name,
         event: 'AFTER_DESTROY',
-        instances: [instance.toJSON()]
+        instances: await toJson([instance])
     });
 }
 
-export function genericEntityNotifierAfterUpdate(instance: Model, options: any) {
+export async function genericEntityNotifierAfterUpdate(instance: Model, options: any) {
     AppSIO.send(LIVE_UPDATE_EVENT, {
         model: this.name,
         event: 'AFTER_UPDATE',
         fields: options.fields,
-        instances: [instance.toJSON()]
+        instances: await toJson([instance])
     });
 }
 
-export function genericEntityNotifierAfterBulkCreate(instances: Model[], options: any) {
+export async function genericEntityNotifierAfterBulkCreate(instances: Model[], options: any) {
     AppSIO.send(LIVE_UPDATE_EVENT, {
         model: options.model.name,
         event: 'AFTER_UPDATE',
         fields: options.fields,
-        instances: instances.map(instance => instance.toJSON())
+        instances: await toJson(instances)
     });
 }
 
@@ -55,4 +56,16 @@ export function genericEntityNotifierAfterBulkUpdate(options: any) {
         fields: options.fields,
         lookup: options.where
     });
+}
+
+async function toJson(instances: Model[]) {
+    const jsonInstances = [];
+    for (const instance of instances) {
+        let json = instance.toJSON();
+        if (json instanceof Promise) {
+            json = await json;
+        }
+        jsonInstances.push(json);
+    }
+    return jsonInstances;
 }

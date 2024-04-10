@@ -1,5 +1,6 @@
 import {ValidationError} from "sequelize";
 
+
 export function formatGenericErrorMessage(error: Error) {
     let message: string = '';
     if (error instanceof ValidationError) {
