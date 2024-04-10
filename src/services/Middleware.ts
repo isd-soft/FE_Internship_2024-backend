@@ -26,7 +26,7 @@ export function authMiddleware(allowedRoles: string[] = []) {
                     return next();
                 }
             }
-            return res.stat(401).json({message: 'Not allowed'});
+            return res.stat(403).json({message: 'Not allowed'});
         } catch (err) {
             return res.status(500).json({message: 'Server error.'});
         }

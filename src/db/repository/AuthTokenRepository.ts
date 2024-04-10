@@ -11,6 +11,9 @@ export async function generateAuthToken(user: any) {
 }
 
 export async function deleteAuthToken(user: AuthUser) {
+    if (!user.id) {
+        return false;
+    }
     return 0 < (
         await AuthToken.destroy({
             where: {
