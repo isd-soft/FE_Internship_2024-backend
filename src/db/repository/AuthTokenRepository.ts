@@ -19,3 +19,11 @@ export async function deleteAuthToken(user: AuthUser) {
         })
     );
 }
+
+export async function findOrGenerateAuthToken(user: AuthUser) {
+    let token: AuthToken = await AuthToken.findOne({where: {user: user.id}});
+    if (token === null) {
+        token = await generateAuthToken(user);
+    }
+    return token;
+}

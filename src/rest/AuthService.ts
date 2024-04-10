@@ -2,7 +2,7 @@ import {AppExpress} from "../index";
 import {hashPassword} from "../services/AuthService";
 import {AuthUser} from "../db/models/AuthUser";
 import {createUserSignUp, findUserByUsername, UserNotFoundError} from "../db/repository/AuthUserRepository";
-import {deleteAuthToken, generateAuthToken} from "../db/repository/AuthTokenRepository";
+import {deleteAuthToken, generateAuthToken, findOrGenerateAuthToken} from "../db/repository/AuthTokenRepository";
 import {formatGenericErrorMessage} from "./utils";
 import {AuthToken} from "../db/models/AuthToken";
 
@@ -18,9 +18,8 @@ AppExpress.post('/auth/sign-in', async (req, res) => {
             responseStat = 417;
             responseData = {message: 'Incorrect password'};
         } else {
-            await deleteAuthToken(user);
             responseStat = 200;
-            responseData = (await generateAuthToken(user)).toJSON();
+            responseData = (await findOrGenerateAuthToken(user)).toJSON();
         }
     } catch (e) {
         responseStat = e instanceof UserNotFoundError ? 417 : 500;
