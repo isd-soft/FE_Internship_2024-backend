@@ -3,7 +3,7 @@ import {createUser, findUserById, updateUser} from "../db/repository/AuthUserRep
 import {AuthUser} from "../db/models/AuthUser";
 import {formatGenericErrorMessage} from "./utils";
 import {Op} from "sequelize";
-import {authMiddleware} from "../services/Middleware";
+import {authMiddleware} from "./middleware/Auth";
 
 
 AppExpress.post('/user/create', authMiddleware(['ADMIN']), async (req, res) => {

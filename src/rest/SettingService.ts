@@ -2,7 +2,8 @@ import {AppExpress} from "../index";
 import {formatGenericErrorMessage} from "./utils";
 import {Setting} from "../db/models/Setting";
 import {Op} from "sequelize";
-import {authMiddleware} from "../services/Middleware";
+import {authMiddleware} from "./middleware/Auth";
+import {settingAccessLevelMiddleware} from "./middleware/Settings";
 
 
 AppExpress.get('/setting/list', authMiddleware(['ADMIN']), async (req, res) => {
@@ -10,7 +11,7 @@ AppExpress.get('/setting/list', authMiddleware(['ADMIN']), async (req, res) => {
     res.send((await Setting.findAll({order: ['name']})).map(a => a.toJSON()));
 });
 
-AppExpress.get('/setting/read/:name', authMiddleware(['ADMIN']), async (req, res) => {
+AppExpress.get('/setting/read/:name', settingAccessLevelMiddleware(['ADMIN']), async (req, res) => {
     let responseStat: number;
     let responseData: any;
     try {

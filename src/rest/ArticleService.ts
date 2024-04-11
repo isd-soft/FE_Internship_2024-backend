@@ -3,7 +3,7 @@ import {formatGenericErrorMessage} from "./utils";
 import {Article} from "../db/models/Article";
 import {ArticleNotFound, findArticle} from "../db/repository/ArticleRepository";
 import {Op} from "sequelize";
-import {authMiddleware} from "../services/Middleware";
+import {authMiddleware} from "./middleware/Auth";
 
 
 AppExpress.get('/article/list', async (req, res) => {

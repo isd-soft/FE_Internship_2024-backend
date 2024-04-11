@@ -1,7 +1,7 @@
 import {AppExpress} from "../index";
 import {UserNotFoundError} from "../db/repository/AuthUserRepository";
 import {AuthRole} from "../db/models/AuthRole";
-import {authMiddleware} from "../services/Middleware";
+import {authMiddleware} from "./middleware/Auth";
 
 
 AppExpress.get('/auth/role/list', authMiddleware(['ADMIN']), async (req, res) => {

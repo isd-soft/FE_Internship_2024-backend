@@ -32,4 +32,8 @@ export class Setting extends Model<Setting> {
     @Default(() => ({}))
     @Column(DataType.JSON)
     value: any;
+
+    @Default(false)
+    @Column(DataType.BOOLEAN)
+    isPublic: boolean
 }
