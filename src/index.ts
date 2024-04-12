@@ -12,7 +12,7 @@ export const AppSIO: ServerSIO = new ServerSIO(AppServer, config.sio.opts);
 AppExpress.use(express.json());
 AppExpress.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, X-Auth-Token, Content-Type, Accept");
     next();
 });
 
