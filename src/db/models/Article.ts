@@ -1,22 +1,8 @@
 import {AllowNull, Column, DataType, Default, Model, NotNull, PrimaryKey, Table, Unique} from "sequelize-typescript";
-import {
-    genericEntityNotifierAfterBulkCreate, genericEntityNotifierAfterBulkDestroy, genericEntityNotifierAfterBulkUpdate,
-    genericEntityNotifierAfterCreate,
-    genericEntityNotifierAfterDestroy,
-    genericEntityNotifierAfterUpdate
-} from "../../ws/Hooks";
 
 
 @Table({
     timestamps: true,
-    hooks: {
-        afterCreate: genericEntityNotifierAfterCreate,
-        afterDestroy: genericEntityNotifierAfterDestroy,
-        afterUpdate: genericEntityNotifierAfterUpdate,
-        afterBulkCreate: genericEntityNotifierAfterBulkCreate,
-        afterBulkDestroy: genericEntityNotifierAfterBulkDestroy,
-        afterBulkUpdate: genericEntityNotifierAfterBulkUpdate
-    }
 })
 export class Article extends Model<Article> {
     @PrimaryKey

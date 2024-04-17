@@ -15,24 +15,10 @@ import {AuthUserRole} from "./AuthUserRole";
 import {AuthToken} from "./AuthToken";
 import {BelongsToManyGetAssociationsMixin, BelongsToManySetAssociationsMixin, NonAttribute} from "sequelize";
 import {AuthRole} from "./AuthRole";
-import {
-    genericEntityNotifierAfterBulkCreate, genericEntityNotifierAfterBulkDestroy, genericEntityNotifierAfterBulkUpdate,
-    genericEntityNotifierAfterCreate,
-    genericEntityNotifierAfterDestroy,
-    genericEntityNotifierAfterUpdate
-} from "../../ws/Hooks";
 
 
 @Table({
     timestamps: true,
-    hooks: {
-        afterCreate: genericEntityNotifierAfterCreate,
-        afterDestroy: genericEntityNotifierAfterDestroy,
-        afterUpdate: genericEntityNotifierAfterUpdate,
-        afterBulkCreate: genericEntityNotifierAfterBulkCreate,
-        afterBulkDestroy: genericEntityNotifierAfterBulkDestroy,
-        afterBulkUpdate: genericEntityNotifierAfterBulkUpdate
-    }
 })
 export class AuthUser extends Model<AuthUser> {
     @PrimaryKey

@@ -1,9 +1,10 @@
-import {AppExpress} from "../index";
+import {AppExpress, AppSIO} from "../index";
 import {createUser, findUserById, updateUser} from "../db/repository/AuthUserRepository";
 import {AuthUser} from "../db/models/AuthUser";
 import {formatGenericErrorMessage} from "./utils";
 import {Op} from "sequelize";
 import {authMiddleware} from "./middleware/Auth";
+import {DB_HOOKS, emitDbHook} from "../ws/Broadcast";
 
 
 AppExpress.post('/user/create', authMiddleware(['ADMIN']), async (req, res) => {
@@ -11,6 +12,7 @@ AppExpress.post('/user/create', authMiddleware(['ADMIN']), async (req, res) => {
     let responseData: any;
     try {
         const user: AuthUser = await createUser(req.body);
+        await emitDbHook([user], DB_HOOKS.CREATE);
         responseStat = 200;
         responseData = await user.toJSON();
     } catch (e) {
@@ -53,7 +55,8 @@ AppExpress.post('/user/update', authMiddleware(['ADMIN']), async (req, res) => {
     try {
         responseStat = 200;
         responseData = {};
-        await updateUser(req.body);
+        const user = await updateUser(req.body);
+        await emitDbHook([user], DB_HOOKS.CREATE);
     } catch (e) {
         responseStat = 500;
         responseData = {message: formatGenericErrorMessage(e)};
@@ -66,13 +69,16 @@ AppExpress.delete('/user/delete', authMiddleware(['ADMIN']), async (req, res) =>
     let responseStat: number;
     let responseData: any;
     try {
-        responseStat = 200;
-        responseData = {};
-        await AuthUser.destroy({
+        const lookup = {
             where: {
                 id: {[Op.in]: req.body}
             }
-        })
+        }
+        const users = await AuthUser.findAll(lookup);
+        await AuthUser.destroy(lookup);
+        await emitDbHook(users, DB_HOOKS.DELETE);
+        responseStat = 200;
+        responseData = {};
     } catch (e) {
         responseStat = 500;
         responseData = {message: formatGenericErrorMessage(e)};

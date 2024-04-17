@@ -1,10 +1,10 @@
 import {
-    AllowNull, BelongsTo,
+    AllowNull,
     Column,
     CreatedAt,
     DataType,
-    Default, ForeignKey,
-    HasOne,
+    Default,
+    ForeignKey,
     Model,
     NotNull,
     PrimaryKey,

@@ -4,6 +4,7 @@ import {Article} from "../db/models/Article";
 import {ArticleNotFound, findArticle} from "../db/repository/ArticleRepository";
 import {Op} from "sequelize";
 import {authMiddleware} from "./middleware/Auth";
+import {DB_HOOKS, emitDbHook} from "../ws/Broadcast";
 
 
 AppExpress.get('/article/list', async (req, res) => {
@@ -31,6 +32,7 @@ AppExpress.post('/article/create', authMiddleware(['ADMIN']), async (req, res) =
     let responseData: any;
     try {
         const article: Article = await Article.create(req.body);
+        await emitDbHook([article], DB_HOOKS.CREATE);
         responseStat = 200;
         responseData = article.toJSON();
     } catch (e) {
@@ -48,6 +50,7 @@ AppExpress.post('/article/update', authMiddleware(['ADMIN']), async (req, res) =
         const article: Article = await findArticle(req.body.id);
         Object.assign(article, req.body);
         await article.save();
+        await emitDbHook([article], DB_HOOKS.UPDATE);
         responseStat = 200;
         responseData = article.toJSON();
     } catch (e) {
@@ -62,13 +65,16 @@ AppExpress.delete('/article/delete', authMiddleware(['ADMIN']), async (req, res)
     let responseStat: number;
     let responseData: any;
     try {
-        responseStat = 200;
-        responseData = {};
-        await Article.destroy({
+        const lookup = {
             where: {
                 id: {[Op.in]: req.body}
             }
-        });
+        }
+        const articles = await Article.findAll(lookup)
+        await Article.destroy(lookup);
+        await emitDbHook(articles, DB_HOOKS.DELETE);
+        responseStat = 200;
+        responseData = articles.map(a => a.toJSON());
     } catch (e) {
         responseStat = 500;
         responseData = {message: formatGenericErrorMessage(e)};

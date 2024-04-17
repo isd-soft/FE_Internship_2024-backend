@@ -69,6 +69,7 @@ export async function updateUser(userData: any) {
     } catch (e) {
         await transaction.rollback()
     }
+    return user;
 }
 
 export async function findUserByUsername(username: string) {
