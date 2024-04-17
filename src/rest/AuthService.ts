@@ -5,6 +5,7 @@ import {createUserSignUp, findUserByUsername, UserNotFoundError} from "../db/rep
 import {deleteAuthToken, generateAuthToken, findOrGenerateAuthToken} from "../db/repository/AuthTokenRepository";
 import {formatGenericErrorMessage} from "./utils";
 import {AuthToken} from "../db/models/AuthToken";
+import {DB_HOOKS, emitDbHook} from "../ws/Broadcast";
 
 
 AppExpress.post('/auth/sign-in', async (req, res) => {
@@ -38,6 +39,7 @@ AppExpress.post('/auth/sign-up', async (req, res) => {
     try {
         const user: AuthUser = await createUserSignUp(req.body);
         const authToken: AuthToken = await generateAuthToken(user);
+        await emitDbHook([user], DB_HOOKS.CREATE);
         responseStat = 200;
         responseData = {
             user: await user.toJSON(),
