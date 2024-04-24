@@ -1,18 +1,12 @@
 import express, {Express} from "express";
 import {sequelize} from "./db";
-import {createServer, Server} from "https";
+import {createServer, Server as ServerHTTP} from "node:http";
 import {Server as ServerSIO} from "socket.io";
-import {readFileSync} from "fs";
 import * as config from 'config';
-import * as path from 'path';
 
-const httpsServerOptions = {
-    key: readFileSync(path.resolve(__dirname + '/../tls/server.key')),
-    cert: readFileSync(path.resolve(__dirname + '/../tls/server.crt'))
-}
 
 export const AppExpress: Express = express();
-export const AppServer: Server = createServer(httpsServerOptions, AppExpress);
+export const AppServer: ServerHTTP = createServer(AppExpress);
 export const AppSIO: ServerSIO = new ServerSIO(AppServer, config.sio.opts);
 
 AppExpress.use(express.json());
@@ -32,3 +26,4 @@ import './rest/AuthRoleService'
 sequelize.sync(config.sequelize.sync).finally(async () => {
     AppServer.listen(config.http.port);
 });
+
