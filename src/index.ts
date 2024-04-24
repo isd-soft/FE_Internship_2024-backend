@@ -1,12 +1,18 @@
 import express, {Express} from "express";
 import {sequelize} from "./db";
-import {createServer, Server as ServerHTTP} from "node:http";
+import {createServer, Server} from "https";
 import {Server as ServerSIO} from "socket.io";
+import {readFileSync} from "fs";
 import * as config from 'config';
+import * as path from 'path';
 
+const httpsServerOptions = {
+    key: readFileSync(path.resolve(__dirname + '/../tls/server.key')),
+    cert: readFileSync(path.resolve(__dirname + '/../tls/server.crt'))
+}
 
 export const AppExpress: Express = express();
-export const AppServer: ServerHTTP = createServer(AppExpress);
+export const AppServer: Server = createServer(httpsServerOptions, AppExpress);
 export const AppSIO: ServerSIO = new ServerSIO(AppServer, config.sio.opts);
 
 AppExpress.use(express.json());
